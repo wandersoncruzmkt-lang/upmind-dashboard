@@ -1,0 +1,2073 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#0F2A44">
+    <meta name="description" content="Controle Financeiro, Gestão de Clientes, Equipe e Produtos">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="UPMIND">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect fill='%230F2A44' width='180' height='180' rx='40'/><rect x='22' y='108' width='32' height='75' fill='%23C9A44C' rx='5'/><rect x='64' y='64' width='32' height='119' fill='%23C9A44C' rx='5'/><rect x='106' y='22' width='32' height='161' fill='%23C9A44C' rx='5'/><path d='M 106 22 L 138 22 L 138 10 L 106 42 Z' fill='%23C9A44C'/></svg>">
+    <link rel="manifest" href="manifest.json">
+    <title>UPMIND — Financial Dashboard + CRM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0F2A44;
+            --secondary: #132A85;
+            --accent-gold: #C9A44C;
+            --tertiary-gray: #B1B5BB;
+            --bg-dark-1: #080f1a;
+            --bg-dark-2: #0c1929;
+            --bg-dark-3: #0f2035;
+            --text-primary: #ECEDEE;
+            --text-secondary: #B1B5BB;
+            --border-color: #1a2a3a;
+            --success: #22C55E;
+            --warning: #F59E0B;
+            --error: #EF4444;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, var(--bg-dark-1) 0%, var(--bg-dark-2) 50%, var(--bg-dark-3) 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        /* HEADER */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 24px 32px;
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .header-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header-icon svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+        }
+
+        .header-text h1 {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .header-text p {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--accent-gold);
+            letter-spacing: 0.3px;
+        }
+
+        /* TAB NAVIGATION */
+        .tab-nav {
+            display: flex;
+            background: var(--bg-dark-2);
+            border-bottom: 1px solid var(--border-color);
+            gap: 0;
+            padding: 0 32px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            max-width: 200px;
+            padding: 16px 20px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            position: relative;
+        }
+
+        .tab-btn:hover {
+            color: var(--accent-gold);
+            background: rgba(201, 164, 76, 0.05);
+        }
+
+        .tab-btn.active {
+            color: var(--accent-gold);
+            border-bottom-color: var(--accent-gold);
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 32px;
+            background: linear-gradient(135deg, var(--bg-dark-2) 0%, var(--bg-dark-3) 100%);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* CARDS & PANELS */
+        .card {
+            background: rgba(15, 42, 68, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: var(--accent-gold);
+            box-shadow: 0 6px 16px rgba(201, 164, 76, 0.1);
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--accent-gold);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card-subtitle {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        /* SUMMARY CARDS */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .summary-card {
+            background: rgba(19, 42, 133, 0.4);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .summary-card:hover {
+            border-color: var(--accent-gold);
+            background: rgba(201, 164, 76, 0.1);
+        }
+
+        .summary-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-bottom: 8px;
+        }
+
+        .summary-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent-gold);
+            font-family: 'IBM Plex Mono', monospace;
+            margin-bottom: 4px;
+        }
+
+        .summary-percent {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        /* FORMS */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-bottom: 6px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px 12px;
+            background: rgba(8, 15, 26, 0.8);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 8px rgba(201, 164, 76, 0.2);
+            background: rgba(8, 15, 26, 0.95);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        /* BUTTONS */
+        .btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .btn-primary {
+            background: var(--accent-gold);
+            color: var(--primary);
+        }
+
+        .btn-primary:hover {
+            background: #dab85c;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(201, 164, 76, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(19, 42, 133, 0.8);
+            border-color: var(--accent-gold);
+        }
+
+        .btn-danger {
+            background: var(--error);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        /* TABLES */
+        .table-container {
+            overflow-x: auto;
+            margin-top: 12px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        th {
+            background: rgba(19, 42, 133, 0.3);
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--accent-gold);
+            border-bottom: 1px solid var(--border-color);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            font-size: 11px;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        tr:hover {
+            background: rgba(201, 164, 76, 0.05);
+        }
+
+        /* TOAST NOTIFICATIONS */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary);
+            color: var(--text-primary);
+            padding: 16px 20px;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-gold);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            animation: slideIn 0.3s ease;
+            z-index: 1000;
+            max-width: 300px;
+        }
+
+        .toast.success {
+            border-left-color: var(--success);
+        }
+
+        .toast.error {
+            border-left-color: var(--error);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* PROGRESS BAR */
+        .progress-bar {
+            width: 100%;
+            height: 24px;
+            background: rgba(8, 15, 26, 0.8);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-gold) 0%, #dab85c 100%);
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* STACKED BAR */
+        .stacked-bar {
+            display: flex;
+            height: 32px;
+            border-radius: 8px;
+            overflow: hidden;
+            gap: 1px;
+            background: rgba(8, 15, 26, 0.8);
+            border: 1px solid var(--border-color);
+            margin-top: 8px;
+        }
+
+        .bar-segment {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--primary);
+            transition: all 0.3s ease;
+        }
+
+        .bar-segment:hover {
+            filter: brightness(1.2);
+        }
+
+        /* GRID LAYOUTS */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+        }
+
+        /* EMPTY STATE */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .empty-state-text {
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        /* STATUS BADGES */
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.2px;
+        }
+
+        .badge-ativo {
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--success);
+        }
+
+        .badge-pausado {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+
+        .badge-encerrado {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--error);
+        }
+
+        .badge-pago {
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--success);
+        }
+
+        .badge-pendente {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+
+        .badge-atrasado {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--error);
+        }
+
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-dark-2);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-header {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--accent-gold);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .modal-close:hover {
+            color: var(--accent-gold);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .header {
+                padding: 16px;
+            }
+
+            .header-text h1 {
+                font-size: 18px;
+            }
+
+            .header-text p {
+                font-size: 11px;
+            }
+
+            .main-content {
+                padding: 16px;
+            }
+
+            .tab-nav {
+                padding: 0 16px;
+                overflow-x: auto;
+            }
+
+            .tab-btn {
+                max-width: none;
+                min-width: 120px;
+            }
+
+            .summary-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .grid-3 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            th, td {
+                padding: 8px;
+            }
+        }
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark-2);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-gold);
+        }
+
+        /* UTILITY CLASSES */
+        .mt-4 { margin-top: 16px; }
+        .mb-4 { margin-bottom: 16px; }
+        .gap-2 { gap: 8px; }
+        .gap-4 { gap: 16px; }
+        .flex { display: flex; }
+        .flex-col { flex-direction: column; }
+        .items-center { align-items: center; }
+        .justify-between { justify-content: space-between; }
+        .w-full { width: 100%; }
+        .text-center { text-align: center; }
+        .text-gold { color: var(--accent-gold); }
+        .text-secondary { color: var(--text-secondary); }
+        .font-mono { font-family: 'IBM Plex Mono', monospace; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <div class="header">
+            <div class="header-left">
+                <div class="header-icon">
+                    <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="4" y="20" width="6" height="14" fill="#C9A44C" rx="1"/>
+                        <rect x="12" y="12" width="6" height="22" fill="#C9A44C" rx="1"/>
+                        <rect x="20" y="8" width="6" height="26" fill="#C9A44C" rx="1"/>
+                        <rect x="28" y="4" width="6" height="30" fill="#C9A44C" rx="1"/>
+                        <path d="M 28 4 L 34 4 L 34 2 L 28 8 Z" fill="#C9A44C"/>
+                    </svg>
+                </div>
+                <div class="header-text">
+                    <h1>WANDERSON CRUZ</h1>
+                    <p>Controle Financeiro · Marketing, Gestão e Vendas</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB NAVIGATION -->
+        <div class="tab-nav">
+            <button class="tab-btn active" data-tab="financeiro">💰 Financeiro</button>
+            <button class="tab-btn" data-tab="clientes">👥 Clientes</button>
+            <button class="tab-btn" data-tab="equipe">🧑‍💼 Equipe</button>
+            <button class="tab-btn" data-tab="produtos">📦 Produtos</button>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div class="main-content">
+            <!-- TAB: FINANCEIRO -->
+            <div id="financeiro" class="tab-content active">
+                <div class="card">
+                    <div class="card-title">Seletor de Mês</div>
+                    <div class="flex gap-4 items-center">
+                        <button class="btn btn-secondary btn-small" id="prevMonth">← Mês Anterior</button>
+                        <input type="month" id="monthSelector" style="flex: 1; max-width: 200px;">
+                        <button class="btn btn-secondary btn-small" id="nextMonth">Próximo Mês →</button>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="form-group">
+                            <label>Receita Total (R$)</label>
+                            <input type="number" id="receitaTotal" placeholder="0.00" step="0.01" min="0">
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="form-group">
+                            <label>Meta Mensal (R$)</label>
+                            <input type="number" id="metaMensal" placeholder="0.00" step="0.01" min="0">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Progresso da Meta</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressBar" style="width: 0%">0%</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Saldo Líquido</div>
+                    <div style="font-size: 32px; font-weight: 700; color: var(--accent-gold); font-family: 'IBM Plex Mono', monospace; text-align: center;">
+                        R$ <span id="saldoLiquido">0.00</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Resumo de Despesas</div>
+                    <div class="summary-grid">
+                        <div class="summary-card">
+                            <div class="summary-label">Funcionários</div>
+                            <div class="summary-value" id="totalFuncionarios">R$ 0.00</div>
+                            <div class="summary-percent" id="percentFuncionarios">0%</div>
+                        </div>
+                        <div class="summary-card">
+                            <div class="summary-label">Aplicativos</div>
+                            <div class="summary-value" id="totalApps">R$ 0.00</div>
+                            <div class="summary-percent" id="percentApps">0%</div>
+                        </div>
+                        <div class="summary-card">
+                            <div class="summary-label">Investimentos</div>
+                            <div class="summary-value" id="totalInvest">R$ 0.00</div>
+                            <div class="summary-percent" id="percentInvest">0%</div>
+                        </div>
+                        <div class="summary-card">
+                            <div class="summary-label">Gasto Pessoal</div>
+                            <div class="summary-value" id="totalPessoal">R$ 0.00</div>
+                            <div class="summary-percent" id="percentPessoal">0%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Distribuição Proporcional</div>
+                    <div class="stacked-bar" id="stackedBar"></div>
+                </div>
+
+                <div class="grid-2">
+                    <!-- FUNCIONÁRIOS -->
+                    <div class="card">
+                        <div class="card-title">Funcionários</div>
+                        <button class="btn btn-secondary btn-small mb-4" id="syncEquipeBtn">↻ Atualizar da Equipe</button>
+                        <div id="funcionariosList"></div>
+                        <div class="btn-group">
+                            <input type="text" id="nomeFuncionario" placeholder="Nome" style="flex: 1;">
+                            <input type="number" id="valorFuncionario" placeholder="R$" step="0.01" min="0" style="flex: 1;">
+                            <button class="btn btn-primary btn-small" id="addFuncionarioBtn">+</button>
+                        </div>
+                    </div>
+
+                    <!-- APLICATIVOS -->
+                    <div class="card">
+                        <div class="card-title">Aplicativos</div>
+                        <div id="aplicativosList"></div>
+                        <div class="btn-group">
+                            <input type="text" id="nomeApp" placeholder="Nome" style="flex: 1;">
+                            <input type="number" id="valorApp" placeholder="R$" step="0.01" min="0" style="flex: 1;">
+                            <button class="btn btn-primary btn-small" id="addAppBtn">+</button>
+                        </div>
+                    </div>
+
+                    <!-- INVESTIMENTOS -->
+                    <div class="card">
+                        <div class="card-title">Investimentos</div>
+                        <div id="investimentosList"></div>
+                        <div class="btn-group">
+                            <input type="text" id="nomeInvest" placeholder="Nome" style="flex: 1;">
+                            <input type="number" id="valorInvest" placeholder="R$" step="0.01" min="0" style="flex: 1;">
+                            <button class="btn btn-primary btn-small" id="addInvestBtn">+</button>
+                        </div>
+                    </div>
+
+                    <!-- GASTOS PESSOAIS -->
+                    <div class="card">
+                        <div class="card-title">Gastos Pessoais</div>
+                        <div id="gastosPessoaisList"></div>
+                        <div class="btn-group">
+                            <input type="text" id="nomeGasto" placeholder="Nome" style="flex: 1;">
+                            <input type="number" id="valorGasto" placeholder="R$" step="0.01" min="0" style="flex: 1;">
+                            <button class="btn btn-primary btn-small" id="addGastoBtn">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RECEITA POR CLIENTE -->
+                <div class="card">
+                    <div class="card-title">Receita por Cliente</div>
+                    <div id="receitaPorClientePanel"></div>
+                </div>
+
+                <!-- SUGESTÕES DE INVESTIMENTO -->
+                <div class="card">
+                    <div class="card-title">Sugestões de Investimento</div>
+                    <div id="sugestoesInvestimento"></div>
+                </div>
+
+                <!-- NOTAS ESTRATÉGICAS -->
+                <div class="card">
+                    <div class="form-group">
+                        <label>Notas Estratégicas do Mês</label>
+                        <textarea id="notasEstrategicas" placeholder="Escreva suas notas estratégicas..."></textarea>
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-primary" id="salvarFinanceiroBtn">Salvar</button>
+                    <button class="btn btn-secondary" id="exportarCSVBtn">Exportar CSV</button>
+                </div>
+            </div>
+
+            <!-- TAB: CLIENTES -->
+            <div id="clientes" class="tab-content">
+                <div class="card">
+                    <div class="card-title">Filtros</div>
+                    <div class="flex gap-4">
+                        <button class="btn btn-secondary btn-small" data-filter="todos">Todos</button>
+                        <button class="btn btn-secondary btn-small" data-filter="ativo">Ativos</button>
+                        <button class="btn btn-secondary btn-small" data-filter="encerrado">Encerrados</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Novo Cliente</div>
+                    <div class="form-group">
+                        <label>Nome do Cliente / Empresa</label>
+                        <input type="text" id="nomeCliente" placeholder="Nome">
+                    </div>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label>Tipo</label>
+                            <select id="tipoCliente">
+                                <option value="Médico">Médico</option>
+                                <option value="Empresário">Empresário</option>
+                                <option value="Clínica">Clínica</option>
+                                <option value="Outro">Outro</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select id="statusCliente">
+                                <option value="Ativo">Ativo</option>
+                                <option value="Pausado">Pausado</option>
+                                <option value="Encerrado">Encerrado</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label>Duração do Contrato</label>
+                            <select id="duracaoContrato">
+                                <option value="Recorrente">Recorrente</option>
+                                <option value="1">1 mês</option>
+                                <option value="2">2 meses</option>
+                                <option value="3">3 meses</option>
+                                <option value="6">6 meses</option>
+                                <option value="Personalizado">Personalizado</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Data de Início</label>
+                            <input type="date" id="dataInicio">
+                        </div>
+                    </div>
+                    <div class="form-group" id="dataTerminoGroup" style="display: none;">
+                        <label>Data de Término</label>
+                        <input type="date" id="dataTermino">
+                    </div>
+                    <div class="form-group">
+                        <label>Observações</label>
+                        <textarea id="observacoesCliente" placeholder="Observações..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Serviços Contratados</label>
+                        <div id="servicosCheckbox" style="max-height: 200px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: 8px; padding: 12px;"></div>
+                    </div>
+                    <div class="card-subtitle">Total Mensal: R$ <span id="totalMensalCliente" class="text-gold">0.00</span></div>
+                    <button class="btn btn-primary" id="adicionarClienteBtn">Adicionar Cliente</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Clientes</div>
+                    <div id="clientesList"></div>
+                </div>
+            </div>
+
+            <!-- TAB: EQUIPE -->
+            <div id="equipe" class="tab-content">
+                <div class="card">
+                    <div class="card-title">Novo Colaborador</div>
+                    <div class="form-group">
+                        <label>Nome Completo</label>
+                        <input type="text" id="nomeColaborador" placeholder="Nome">
+                    </div>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label>Cargo/Função</label>
+                            <select id="cargoColaborador">
+                                <option value="">Selecione...</option>
+                                <option value="Videomaker">Videomaker</option>
+                                <option value="Social Media">Social Media</option>
+                                <option value="Copywriter">Copywriter</option>
+                                <option value="Designer Gráfico">Designer Gráfico</option>
+                                <option value="Gestor de Tráfego">Gestor de Tráfego</option>
+                                <option value="Fotógrafo">Fotógrafo</option>
+                                <option value="Estrategista de Marketing">Estrategista de Marketing</option>
+                                <option value="Consultor de Vendas">Consultor de Vendas</option>
+                                <option value="Gestor Comercial">Gestor Comercial</option>
+                                <option value="Gestor de Projetos">Gestor de Projetos</option>
+                                <option value="Assistente Administrativo">Assistente Administrativo</option>
+                                <option value="Programador / Dev">Programador / Dev</option>
+                                <option value="Editor de Vídeo">Editor de Vídeo</option>
+                                <option value="Analista de Dados">Analista de Dados</option>
+                                <option value="Atendimento ao Cliente">Atendimento ao Cliente</option>
+                                <option value="Outro">Outro</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Tipo de Vínculo</label>
+                            <select id="vinculoColaborador">
+                                <option value="CLT">CLT</option>
+                                <option value="Freelancer">Freelancer</option>
+                                <option value="Prestador de serviço">Prestador de serviço</option>
+                                <option value="Sócio">Sócio</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label>Valor Mensal (R$)</label>
+                            <input type="number" id="valorColaborador" placeholder="0.00" step="0.01" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select id="statusColaborador">
+                                <option value="Ativo">Ativo</option>
+                                <option value="Inativo">Inativo</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" id="adicionarColaboradorBtn">Adicionar Colaborador</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Folha Mensal Total</div>
+                    <div style="font-size: 28px; font-weight: 700; color: var(--accent-gold); font-family: 'IBM Plex Mono', monospace; text-align: center; margin-bottom: 16px;">
+                        R$ <span id="folhaMensalTotal">0.00</span>
+                    </div>
+                    <button class="btn btn-secondary w-full" id="enviarParaFinanceiroBtn">Enviar Total para Financeiro</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Equipe</div>
+                    <div id="equipeList"></div>
+                </div>
+            </div>
+
+            <!-- TAB: PRODUTOS -->
+            <div id="produtos" class="tab-content">
+                <div class="card">
+                    <div class="card-title">Novo Produto</div>
+                    <div class="form-group">
+                        <label>Nome do Produto/Serviço</label>
+                        <input type="text" id="nomeProduto" placeholder="Nome">
+                    </div>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label>Categoria</label>
+                            <input type="text" id="categoriaProduto" placeholder="Categoria">
+                        </div>
+                        <div class="form-group">
+                            <label>Valor de Referência (R$)</label>
+                            <input type="number" id="valorRefProduto" placeholder="0.00" step="0.01" min="0">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Descrição</label>
+                        <textarea id="descricaoProduto" placeholder="Descrição..."></textarea>
+                    </div>
+                    <button class="btn btn-primary" id="adicionarProdutoBtn">Adicionar Produto</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Produtos</div>
+                    <div id="produtosList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== STATE & STORAGE ====================
+        const state = {
+            currentMonth: new Date().toISOString().slice(0, 7),
+            currentFilter: 'todos'
+        };
+
+        const load = (key, fallback = null) => {
+            try {
+                const data = localStorage.getItem(key);
+                return data ? JSON.parse(data) : fallback;
+            } catch (e) {
+                console.error(`Erro ao carregar ${key}:`, e);
+                return fallback;
+            }
+        };
+
+        const save = (key, value) => {
+            try {
+                localStorage.setItem(key, JSON.stringify(value));
+            } catch (e) {
+                console.error(`Erro ao salvar ${key}:`, e);
+            }
+        };
+
+        const uid = () => '_' + Math.random().toString(36).substr(2, 9);
+
+        // ==================== TOAST NOTIFICATIONS ====================
+        const showToast = (message, type = 'success') => {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        };
+
+        // ==================== CURRENCY FORMATTING ====================
+        const formatCurrency = (value) => {
+            return new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            }).format(value || 0);
+        };
+
+        const parseCurrency = (value) => {
+            if (!value) return 0;
+            return parseFloat(String(value).replace(/[^\d.-]/g, '')) || 0;
+        };
+
+        // ==================== DATE HELPERS ====================
+        const getMonthKey = (date) => {
+            const d = new Date(date);
+            return d.toISOString().slice(0, 7);
+        };
+
+        const addMonths = (monthKey, months) => {
+            const [year, month] = monthKey.split('-').map(Number);
+            let newMonth = month + months;
+            let newYear = year;
+            while (newMonth > 12) {
+                newMonth -= 12;
+                newYear++;
+            }
+            while (newMonth < 1) {
+                newMonth += 12;
+                newYear--;
+            }
+            return `${newYear}-${String(newMonth).padStart(2, '0')}`;
+        };
+
+        const calcularDataTermino = (dataInicio, duracao) => {
+            if (duracao === 'Recorrente' || duracao === 'Personalizado') return null;
+            const meses = parseInt(duracao);
+            const d = new Date(dataInicio);
+            d.setMonth(d.getMonth() + meses);
+            return d.toISOString().slice(0, 10);
+        };
+
+        // ==================== PRODUTOS ====================
+        const initProdutos = () => {
+            let produtos = load('upmind_produtos', []);
+            if (produtos.length === 0) {
+                produtos = [
+                    { id: uid(), nome: 'Diagnóstico Estratégico', categoria: 'Consultoria / Mentoria', valorRef: 797, descricao: 'Avulso', ativo: true },
+                    { id: uid(), nome: 'Programa M.A.C.', categoria: 'Consultoria / Mentoria', valorRef: 4997, descricao: '6 semanas', ativo: true },
+                    { id: uid(), nome: 'Mentoria Individual', categoria: 'Consultoria / Mentoria', valorRef: 3000, descricao: '/mês', ativo: true },
+                    { id: uid(), nome: 'Programa UPMIND Completo', categoria: 'Consultoria / Mentoria', valorRef: 15000, descricao: '3-6 meses', ativo: true },
+                    { id: uid(), nome: 'Gestão de Redes Sociais', categoria: 'Para Empresas Locais', valorRef: 1497, descricao: '/mês', ativo: true },
+                    { id: uid(), nome: 'Tráfego Pago Estratégico', categoria: 'Para Empresas Locais', valorRef: 2000, descricao: '/mês (fee)', ativo: true },
+                    { id: uid(), nome: 'Presença Digital Completa', categoria: 'Para Empresas Locais', valorRef: 4000, descricao: '/mês', ativo: true },
+                ];
+                save('upmind_produtos', produtos);
+            }
+            return produtos;
+        };
+
+        const getProdutos = () => load('upmind_produtos', []);
+        const saveProdutos = (produtos) => save('upmind_produtos', produtos);
+
+        const renderProdutosList = () => {
+            const produtos = getProdutos();
+            const container = document.getElementById('produtosList');
+            if (produtos.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-text">Nenhum produto cadastrado</div></div>';
+                return;
+            }
+            container.innerHTML = produtos.map(p => `
+                <div class="card">
+                    <div class="flex justify-between items-center mb-4">
+                        <div>
+                            <div class="card-subtitle">${p.nome}</div>
+                            <div class="text-secondary" style="font-size: 12px;">Categoria: ${p.categoria}</div>
+                        </div>
+                        <button class="btn btn-danger btn-small" onclick="deleteProduto('${p.id}')">Deletar</button>
+                    </div>
+                    <div class="grid-2">
+                        <div>
+                            <label style="margin-bottom: 8px;">Valor de Referência</label>
+                            <input type="number" value="${p.valorRef}" step="0.01" min="0" onchange="updateProdutoValor('${p.id}', this.value)" style="margin-bottom: 8px;">
+                        </div>
+                        <div>
+                            <label style="margin-bottom: 8px;">Descrição</label>
+                            <input type="text" value="${p.descricao}" onchange="updateProdutoDescricao('${p.id}', this.value)" style="margin-bottom: 8px;">
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        };
+
+        const deleteProduto = (id) => {
+            if (confirm('Tem certeza que deseja deletar este produto?')) {
+                let produtos = getProdutos();
+                produtos = produtos.filter(p => p.id !== id);
+                saveProdutos(produtos);
+                renderProdutosList();
+                renderServicosCheckbox();
+                showToast('Produto deletado com sucesso!', 'success');
+            }
+        };
+
+        const updateProdutoValor = (id, valor) => {
+            let produtos = getProdutos();
+            const p = produtos.find(x => x.id === id);
+            if (p) {
+                p.valorRef = parseCurrency(valor);
+                saveProdutos(produtos);
+                renderProdutosList();
+                showToast('Valor atualizado!', 'success');
+            }
+        };
+
+        const updateProdutoDescricao = (id, descricao) => {
+            let produtos = getProdutos();
+            const p = produtos.find(x => x.id === id);
+            if (p) {
+                p.descricao = descricao;
+                saveProdutos(produtos);
+                showToast('Descrição atualizada!', 'success');
+            }
+        };
+
+        // ==================== EQUIPE ====================
+        const getEquipe = () => load('upmind_equipe', []);
+        const saveEquipe = (equipe) => save('upmind_equipe', equipe);
+
+        const renderEquipeList = () => {
+            const equipe = getEquipe();
+            const container = document.getElementById('equipeList');
+            if (equipe.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-text">Nenhum colaborador cadastrado</div></div>';
+                return;
+            }
+            container.innerHTML = equipe.map(e => `
+                <div class="card">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <div class="card-subtitle">${e.nome}</div>
+                            <div class="text-secondary" style="font-size: 12px;">
+                                ${e.cargo} • ${e.vinculo} • <span class="badge badge-${e.status.toLowerCase()}">${e.status}</span>
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div class="text-gold font-mono" style="font-size: 16px; font-weight: 700;">R$ ${e.valorMensal.toFixed(2)}</div>
+                            <button class="btn btn-danger btn-small" style="margin-top: 8px;" onclick="deleteColaborador('${e.id}')">Deletar</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            updateFolhaMensalTotal();
+        };
+
+        const deleteColaborador = (id) => {
+            if (confirm('Tem certeza que deseja deletar este colaborador?')) {
+                let equipe = getEquipe();
+                equipe = equipe.filter(e => e.id !== id);
+                saveEquipe(equipe);
+                renderEquipeList();
+                updateFolhaMensalTotal();
+                showToast('Colaborador deletado com sucesso!', 'success');
+            }
+        };
+
+        const updateFolhaMensalTotal = () => {
+            const equipe = getEquipe();
+            const total = equipe.filter(e => e.status === 'Ativo').reduce((sum, e) => sum + e.valorMensal, 0);
+            document.getElementById('folhaMensalTotal').textContent = total.toFixed(2);
+        };
+
+        // ==================== CLIENTES ====================
+        const getClientes = () => load('upmind_clientes', []);
+        const saveClientes = (clientes) => save('upmind_clientes', clientes);
+
+        const renderClientesList = () => {
+            const clientes = getClientes();
+            const container = document.getElementById('clientesList');
+            const filtrados = clientes.filter(c => {
+                if (state.currentFilter === 'ativo') return c.status === 'Ativo';
+                if (state.currentFilter === 'encerrado') return c.status === 'Encerrado';
+                return true;
+            });
+
+            if (filtrados.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-text">Nenhum cliente encontrado</div></div>';
+                return;
+            }
+
+            container.innerHTML = filtrados.map(c => {
+                const servicosNomes = c.servicos.map(s => {
+                    const prod = getProdutos().find(p => p.id === s.produtoId);
+                    return prod ? prod.nome : 'Serviço removido';
+                }).join(', ');
+                const totalMensal = c.servicos.reduce((sum, s) => sum + (s.valorPersonalizado || 0), 0);
+                const diasRestantes = c.duracaoContrato === 'Recorrente' ? null : calcularDiasRestantes(c.dataTermino);
+
+                return `
+                    <div class="card">
+                        <div class="flex justify-between items-center mb-4">
+                            <div>
+                                <div class="card-subtitle">${c.nome}</div>
+                                <div class="text-secondary" style="font-size: 12px;">
+                                    ${c.tipo} • <span class="badge badge-${c.status.toLowerCase()}">${c.status}</span>
+                                </div>
+                            </div>
+                            <button class="btn btn-danger btn-small" onclick="deleteCliente('${c.id}')">Deletar</button>
+                        </div>
+                        <div style="margin-bottom: 12px;">
+                            <div class="text-secondary" style="font-size: 11px; margin-bottom: 4px;">Serviços:</div>
+                            <div style="font-size: 12px;">${servicosNomes || 'Nenhum serviço'}</div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                            <div>
+                                <div class="text-secondary" style="font-size: 11px;">Total/Mês</div>
+                                <div class="text-gold font-mono" style="font-weight: 700;">R$ ${totalMensal.toFixed(2)}</div>
+                            </div>
+                            <div>
+                                <div class="text-secondary" style="font-size: 11px;">Duração</div>
+                                <div style="font-size: 12px;">${c.duracaoContrato === 'Recorrente' ? 'Recorrente' : (diasRestantes ? diasRestantes + ' dias' : 'Expirado')}</div>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary btn-small w-full" onclick="editarClienteModal('${c.id}')">Editar</button>
+                    </div>
+                `;
+            }).join('');
+        };
+
+        const calcularDiasRestantes = (dataTermino) => {
+            if (!dataTermino) return null;
+            const hoje = new Date();
+            const termino = new Date(dataTermino);
+            const diff = termino - hoje;
+            return Math.ceil(diff / (1000 * 60 * 60 * 24));
+        };
+
+        const deleteCliente = (id) => {
+            if (confirm('Tem certeza que deseja deletar este cliente?')) {
+                let clientes = getClientes();
+                clientes = clientes.filter(c => c.id !== id);
+                saveClientes(clientes);
+                renderClientesList();
+                updateReceitaPorCliente();
+                showToast('Cliente deletado com sucesso!', 'success');
+            }
+        };
+
+        const editarClienteModal = (id) => {
+            const clientes = getClientes();
+            const cliente = clientes.find(c => c.id === id);
+            if (!cliente) return;
+
+            // Preencher formulário
+            document.getElementById('nomeCliente').value = cliente.nome;
+            document.getElementById('tipoCliente').value = cliente.tipo;
+            document.getElementById('statusCliente').value = cliente.status;
+            document.getElementById('duracaoContrato').value = cliente.duracaoContrato;
+            document.getElementById('dataInicio').value = cliente.dataInicio;
+            document.getElementById('dataTermino').value = cliente.dataTermino || '';
+            document.getElementById('observacoesCliente').value = cliente.observacoes;
+
+            // Marcar serviços
+            document.querySelectorAll('#servicosCheckbox input[type="checkbox"]').forEach(cb => {
+                cb.checked = cliente.servicos.some(s => s.produtoId === cb.value);
+            });
+
+            updateTotalMensalCliente();
+
+            // Mudar botão para "Atualizar"
+            const btn = document.getElementById('adicionarClienteBtn');
+            btn.textContent = 'Atualizar Cliente';
+            btn.onclick = () => atualizarCliente(id);
+        };
+
+        const atualizarCliente = (id) => {
+            const nome = document.getElementById('nomeCliente').value.trim();
+            const tipo = document.getElementById('tipoCliente').value;
+            const status = document.getElementById('statusCliente').value;
+            const duracao = document.getElementById('duracaoContrato').value;
+            const dataInicio = document.getElementById('dataInicio').value;
+            const dataTermino = document.getElementById('dataTermino').value;
+            const observacoes = document.getElementById('observacoesCliente').value;
+
+            if (!nome || !dataInicio) {
+                showToast('Preencha os campos obrigatórios!', 'error');
+                return;
+            }
+
+            const servicos = Array.from(document.querySelectorAll('#servicosCheckbox input[type="checkbox"]:checked')).map(cb => ({
+                produtoId: cb.value,
+                valorPersonalizado: parseFloat(cb.dataset.valor) || 0
+            }));
+
+            let clientes = getClientes();
+            const idx = clientes.findIndex(c => c.id === id);
+            if (idx >= 0) {
+                clientes[idx] = {
+                    id,
+                    nome,
+                    tipo,
+                    status,
+                    duracaoContrato: duracao,
+                    dataInicio,
+                    dataTermino: duracao === 'Recorrente' ? '' : (duracao === 'Personalizado' ? dataTermino : calcularDataTermino(dataInicio, duracao)),
+                    observacoes,
+                    servicos,
+                    historico: clientes[idx].historico || []
+                };
+                saveClientes(clientes);
+                renderClientesList();
+                updateReceitaPorCliente();
+                limparFormularioCliente();
+                showToast('Cliente atualizado com sucesso!', 'success');
+            }
+        };
+
+        const limparFormularioCliente = () => {
+            document.getElementById('nomeCliente').value = '';
+            document.getElementById('tipoCliente').value = 'Médico';
+            document.getElementById('statusCliente').value = 'Ativo';
+            document.getElementById('duracaoContrato').value = 'Recorrente';
+            document.getElementById('dataInicio').value = '';
+            document.getElementById('dataTermino').value = '';
+            document.getElementById('observacoesCliente').value = '';
+            document.querySelectorAll('#servicosCheckbox input[type="checkbox"]').forEach(cb => cb.checked = false);
+            const btn = document.getElementById('adicionarClienteBtn');
+            btn.textContent = 'Adicionar Cliente';
+            btn.onclick = adicionarCliente;
+            updateTotalMensalCliente();
+        };
+
+        const renderServicosCheckbox = () => {
+            const produtos = getProdutos();
+            const container = document.getElementById('servicosCheckbox');
+            container.innerHTML = produtos.map(p => `
+                <div style="display: flex; align-items: center; margin-bottom: 8px; padding: 8px; background: rgba(8, 15, 26, 0.5); border-radius: 6px;">
+                    <input type="checkbox" value="${p.id}" data-valor="0" onchange="updateTotalMensalCliente()" style="margin-right: 8px; cursor: pointer;">
+                    <label style="flex: 1; margin: 0; cursor: pointer; font-size: 13px; font-weight: 400; text-transform: none; letter-spacing: 0;">${p.nome}</label>
+                    <input type="number" placeholder="R$" step="0.01" min="0" data-produto-id="${p.id}" style="width: 80px; padding: 6px; font-size: 12px;" onchange="updateValorPersonalizado('${p.id}', this.value); updateTotalMensalCliente();">
+                </div>
+            `).join('');
+        };
+
+        const updateValorPersonalizado = (produtoId, valor) => {
+            const checkbox = document.querySelector(`#servicosCheckbox input[value="${produtoId}"]`);
+            if (checkbox) {
+                checkbox.dataset.valor = parseCurrency(valor);
+            }
+        };
+
+        const updateTotalMensalCliente = () => {
+            const total = Array.from(document.querySelectorAll('#servicosCheckbox input[type="checkbox"]:checked')).reduce((sum, cb) => {
+                return sum + (parseFloat(cb.dataset.valor) || 0);
+            }, 0);
+            document.getElementById('totalMensalCliente').textContent = total.toFixed(2);
+        };
+
+        const adicionarCliente = () => {
+            const nome = document.getElementById('nomeCliente').value.trim();
+            const tipo = document.getElementById('tipoCliente').value;
+            const status = document.getElementById('statusCliente').value;
+            const duracao = document.getElementById('duracaoContrato').value;
+            const dataInicio = document.getElementById('dataInicio').value;
+            const dataTermino = document.getElementById('dataTermino').value;
+            const observacoes = document.getElementById('observacoesCliente').value;
+
+            if (!nome || !dataInicio) {
+                showToast('Preencha os campos obrigatórios!', 'error');
+                return;
+            }
+
+            const servicos = Array.from(document.querySelectorAll('#servicosCheckbox input[type="checkbox"]:checked')).map(cb => ({
+                produtoId: cb.value,
+                valorPersonalizado: parseFloat(cb.dataset.valor) || 0
+            }));
+
+            const novoCliente = {
+                id: uid(),
+                nome,
+                tipo,
+                status,
+                duracaoContrato: duracao,
+                dataInicio,
+                dataTermino: duracao === 'Recorrente' ? '' : (duracao === 'Personalizado' ? dataTermino : calcularDataTermino(dataInicio, duracao)),
+                observacoes,
+                servicos,
+                historico: []
+            };
+
+            let clientes = getClientes();
+            clientes.push(novoCliente);
+            saveClientes(clientes);
+            renderClientesList();
+            updateReceitaPorCliente();
+            limparFormularioCliente();
+            showToast('Cliente adicionado com sucesso!', 'success');
+        };
+
+        // ==================== FINANCEIRO ====================
+        const getFinanceiro = (mesKey) => {
+            const data = load('upmind_financeiro_meses', {});
+            return data[mesKey] || {
+                mesKey,
+                receitaTotal: 0,
+                metaMensal: 0,
+                funcionarios: [],
+                aplicativos: [],
+                investimentos: [],
+                gastosPessoais: [],
+                notasEstrategicas: ''
+            };
+        };
+
+        const saveFinanceiro = (mesKey, financeiro) => {
+            const data = load('upmind_financeiro_meses', {});
+            data[mesKey] = financeiro;
+            save('upmind_financeiro_meses', data);
+        };
+
+        const loadFinanceiroMes = () => {
+            const fin = getFinanceiro(state.currentMonth);
+            document.getElementById('receitaTotal').value = fin.receitaTotal;
+            document.getElementById('metaMensal').value = fin.metaMensal;
+            document.getElementById('notasEstrategicas').value = fin.notasEstrategicas;
+            renderFuncionariosList();
+            renderAplicativosList();
+            renderInvestimentosList();
+            renderGastosPessoaisList();
+            updateFinanceiroUI();
+            updateReceitaPorCliente();
+            updateSugestoesInvestimento();
+        };
+
+        const salvarFinanceiro = () => {
+            const fin = getFinanceiro(state.currentMonth);
+            fin.receitaTotal = parseCurrency(document.getElementById('receitaTotal').value);
+            fin.metaMensal = parseCurrency(document.getElementById('metaMensal').value);
+            fin.notasEstrategicas = document.getElementById('notasEstrategicas').value;
+            saveFinanceiro(state.currentMonth, fin);
+            updateFinanceiroUI();
+            showToast('Financeiro salvo com sucesso!', 'success');
+        };
+
+        const updateFinanceiroUI = () => {
+            const fin = getFinanceiro(state.currentMonth);
+            const totalFunc = fin.funcionarios.reduce((sum, f) => sum + (f.valor || 0), 0);
+            const totalApp = fin.aplicativos.reduce((sum, a) => sum + (a.valor || 0), 0);
+            const totalInvest = fin.investimentos.reduce((sum, i) => sum + (i.valor || 0), 0);
+            const totalPessoal = fin.gastosPessoais.reduce((sum, g) => sum + (g.valor || 0), 0);
+            const saldo = fin.receitaTotal - (totalFunc + totalApp + totalInvest + totalPessoal);
+
+            document.getElementById('totalFuncionarios').textContent = formatCurrency(totalFunc);
+            document.getElementById('totalApps').textContent = formatCurrency(totalApp);
+            document.getElementById('totalInvest').textContent = formatCurrency(totalInvest);
+            document.getElementById('totalPessoal').textContent = formatCurrency(totalPessoal);
+            document.getElementById('saldoLiquido').textContent = saldo.toFixed(2);
+
+            const percentFunc = fin.receitaTotal > 0 ? ((totalFunc / fin.receitaTotal) * 100).toFixed(1) : 0;
+            const percentApp = fin.receitaTotal > 0 ? ((totalApp / fin.receitaTotal) * 100).toFixed(1) : 0;
+            const percentInvest = fin.receitaTotal > 0 ? ((totalInvest / fin.receitaTotal) * 100).toFixed(1) : 0;
+            const percentPessoal = fin.receitaTotal > 0 ? ((totalPessoal / fin.receitaTotal) * 100).toFixed(1) : 0;
+
+            document.getElementById('percentFuncionarios').textContent = percentFunc + '%';
+            document.getElementById('percentApps').textContent = percentApp + '%';
+            document.getElementById('percentInvest').textContent = percentInvest + '%';
+            document.getElementById('percentPessoal').textContent = percentPessoal + '%';
+
+            const progressPercent = fin.metaMensal > 0 ? Math.min((fin.receitaTotal / fin.metaMensal) * 100, 100) : 0;
+            const progressBar = document.getElementById('progressBar');
+            progressBar.style.width = progressPercent + '%';
+            progressBar.textContent = progressPercent.toFixed(0) + '%';
+
+            renderStackedBar(totalFunc, totalApp, totalInvest, totalPessoal, fin.receitaTotal);
+        };
+
+        const renderStackedBar = (func, app, invest, pessoal, receita) => {
+            const total = func + app + invest + pessoal;
+            const container = document.getElementById('stackedBar');
+            if (total === 0) {
+                container.innerHTML = '<div style="flex: 1; background: rgba(177, 181, 187, 0.2);"></div>';
+                return;
+            }
+
+            const colors = ['#132A85', '#C9A44C', '#22C55E', '#F59E0B'];
+            const values = [func, app, invest, pessoal];
+            const labels = ['Func', 'Apps', 'Inv', 'Pes'];
+
+            container.innerHTML = values.map((v, i) => {
+                const pct = (v / total) * 100;
+                return `<div class="bar-segment" style="flex: ${pct}; background: ${colors[i]};" title="${labels[i]}: ${formatCurrency(v)}">${pct > 10 ? pct.toFixed(0) + '%' : ''}</div>`;
+            }).join('');
+        };
+
+        // ==================== FUNCIONÁRIOS ====================
+        const renderFuncionariosList = () => {
+            const fin = getFinanceiro(state.currentMonth);
+            const container = document.getElementById('funcionariosList');
+            if (fin.funcionarios.length === 0) {
+                container.innerHTML = '<div style="color: var(--text-secondary); font-size: 12px; margin-bottom: 12px;">Nenhum funcionário</div>';
+                return;
+            }
+            container.innerHTML = fin.funcionarios.map((f, i) => `
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px; background: rgba(8, 15, 26, 0.5); border-radius: 6px; margin-bottom: 6px;">
+                    <span style="font-size: 12px;">${f.nome}</span>
+                    <div style="display: flex; gap: 4px;">
+                        <span style="font-size: 12px; font-weight: 600; color: var(--accent-gold);">R$ ${f.valor.toFixed(2)}</span>
+                        <button class="btn btn-danger btn-small" onclick="deleteFuncionario(${i})">×</button>
+                    </div>
+                </div>
+            `).join('');
+        };
+
+        const addFuncionario = () => {
+            const nome = document.getElementById('nomeFuncionario').value.trim();
+            const valor = parseCurrency(document.getElementById('valorFuncionario').value);
+            if (!nome || valor <= 0) {
+                showToast('Preencha nome e valor!', 'error');
+                return;
+            }
+            const fin = getFinanceiro(state.currentMonth);
+            fin.funcionarios.push({ nome, valor });
+            saveFinanceiro(state.currentMonth, fin);
+            document.getElementById('nomeFuncionario').value = '';
+            document.getElementById('valorFuncionario').value = '';
+            renderFuncionariosList();
+            updateFinanceiroUI();
+        };
+
+        const deleteFuncionario = (index) => {
+            const fin = getFinanceiro(state.currentMonth);
+            fin.funcionarios.splice(index, 1);
+            saveFinanceiro(state.currentMonth, fin);
+            renderFuncionariosList();
+            updateFinanceiroUI();
+        };
+
+        const syncEquipe = () => {
+            const equipe = getEquipe();
+            const totalAtivos = equipe.filter(e => e.status === 'Ativo').reduce((sum, e) => sum + e.valorMensal, 0);
+            const fin = getFinanceiro(state.currentMonth);
+            fin.funcionarios = [{ nome: 'Total Equipe', valor: totalAtivos }];
+            saveFinanceiro(state.currentMonth, fin);
+            renderFuncionariosList();
+            updateFinanceiroUI();
+            showToast('Equipe sincronizada!', 'success');
+        };
+
+        // ==================== APLICATIVOS ====================
+        const renderAplicativosList = () => {
+            const fin = getFinanceiro(state.currentMonth);
+            const container = document.getElementById('aplicativosList');
+            if (fin.aplicativos.length === 0) {
+                container.innerHTML = '<div style="color: var(--text-secondary); font-size: 12px; margin-bottom: 12px;">Nenhum aplicativo</div>';
+                return;
+            }
+            container.innerHTML = fin.aplicativos.map((a, i) => `
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px; background: rgba(8, 15, 26, 0.5); border-radius: 6px; margin-bottom: 6px;">
+                    <span style="font-size: 12px;">${a.nome}</span>
+                    <div style="display: flex; gap: 4px;">
+                        <span style="font-size: 12px; font-weight: 600; color: var(--accent-gold);">R$ ${a.valor.toFixed(2)}</span>
+                        <button class="btn btn-danger btn-small" onclick="deleteApp(${i})">×</button>
+                    </div>
+                </div>
+            `).join('');
+        };
+
+        const addApp = () => {
+            const nome = document.getElementById('nomeApp').value.trim();
+            const valor = parseCurrency(document.getElementById('valorApp').value);
+            if (!nome || valor <= 0) {
+                showToast('Preencha nome e valor!', 'error');
+                return;
+            }
+            const fin = getFinanceiro(state.currentMonth);
+            fin.aplicativos.push({ nome, valor });
+            saveFinanceiro(state.currentMonth, fin);
+            document.getElementById('nomeApp').value = '';
+            document.getElementById('valorApp').value = '';
+            renderAplicativosList();
+            updateFinanceiroUI();
+        };
+
+        const deleteApp = (index) => {
+            const fin = getFinanceiro(state.currentMonth);
+            fin.aplicativos.splice(index, 1);
+            saveFinanceiro(state.currentMonth, fin);
+            renderAplicativosList();
+            updateFinanceiroUI();
+        };
+
+        // ==================== INVESTIMENTOS ====================
+        const renderInvestimentosList = () => {
+            const fin = getFinanceiro(state.currentMonth);
+            const container = document.getElementById('investimentosList');
+            if (fin.investimentos.length === 0) {
+                container.innerHTML = '<div style="color: var(--text-secondary); font-size: 12px; margin-bottom: 12px;">Nenhum investimento</div>';
+                return;
+            }
+            container.innerHTML = fin.investimentos.map((i, idx) => `
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px; background: rgba(8, 15, 26, 0.5); border-radius: 6px; margin-bottom: 6px;">
+                    <span style="font-size: 12px;">${i.nome}</span>
+                    <div style="display: flex; gap: 4px;">
+                        <span style="font-size: 12px; font-weight: 600; color: var(--accent-gold);">R$ ${i.valor.toFixed(2)}</span>
+                        <button class="btn btn-danger btn-small" onclick="deleteInvest(${idx})">×</button>
+                    </div>
+                </div>
+            `).join('');
+        };
+
+        const addInvest = () => {
+            const nome = document.getElementById('nomeInvest').value.trim();
+            const valor = parseCurrency(document.getElementById('valorInvest').value);
+            if (!nome || valor <= 0) {
+                showToast('Preencha nome e valor!', 'error');
+                return;
+            }
+            const fin = getFinanceiro(state.currentMonth);
+            fin.investimentos.push({ nome, valor });
+            saveFinanceiro(state.currentMonth, fin);
+            document.getElementById('nomeInvest').value = '';
+            document.getElementById('valorInvest').value = '';
+            renderInvestimentosList();
+            updateFinanceiroUI();
+        };
+
+        const deleteInvest = (index) => {
+            const fin = getFinanceiro(state.currentMonth);
+            fin.investimentos.splice(index, 1);
+            saveFinanceiro(state.currentMonth, fin);
+            renderInvestimentosList();
+            updateFinanceiroUI();
+        };
+
+        // ==================== GASTOS PESSOAIS ====================
+        const renderGastosPessoaisList = () => {
+            const fin = getFinanceiro(state.currentMonth);
+            const container = document.getElementById('gastosPessoaisList');
+            if (fin.gastosPessoais.length === 0) {
+                container.innerHTML = '<div style="color: var(--text-secondary); font-size: 12px; margin-bottom: 12px;">Nenhum gasto pessoal</div>';
+                return;
+            }
+            container.innerHTML = fin.gastosPessoais.map((g, i) => `
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px; background: rgba(8, 15, 26, 0.5); border-radius: 6px; margin-bottom: 6px;">
+                    <span style="font-size: 12px;">${g.nome}</span>
+                    <div style="display: flex; gap: 4px;">
+                        <span style="font-size: 12px; font-weight: 600; color: var(--accent-gold);">R$ ${g.valor.toFixed(2)}</span>
+                        <button class="btn btn-danger btn-small" onclick="deleteGasto(${i})">×</button>
+                    </div>
+                </div>
+            `).join('');
+        };
+
+        const addGasto = () => {
+            const nome = document.getElementById('nomeGasto').value.trim();
+            const valor = parseCurrency(document.getElementById('valorGasto').value);
+            if (!nome || valor <= 0) {
+                showToast('Preencha nome e valor!', 'error');
+                return;
+            }
+            const fin = getFinanceiro(state.currentMonth);
+            fin.gastosPessoais.push({ nome, valor });
+            saveFinanceiro(state.currentMonth, fin);
+            document.getElementById('nomeGasto').value = '';
+            document.getElementById('valorGasto').value = '';
+            renderGastosPessoaisList();
+            updateFinanceiroUI();
+        };
+
+        const deleteGasto = (index) => {
+            const fin = getFinanceiro(state.currentMonth);
+            fin.gastosPessoais.splice(index, 1);
+            saveFinanceiro(state.currentMonth, fin);
+            renderGastosPessoaisList();
+            updateFinanceiroUI();
+        };
+
+        // ==================== RECEITA POR CLIENTE ====================
+        const updateReceitaPorCliente = () => {
+            const clientes = getClientes();
+            const fin = getFinanceiro(state.currentMonth);
+            const container = document.getElementById('receitaPorClientePanel');
+
+            const clientesAtivos = clientes.filter(c => {
+                if (c.status !== 'Ativo') return false;
+                if (c.duracaoContrato === 'Recorrente') return true;
+                const dataInicio = new Date(c.dataInicio);
+                const dataTermino = new Date(c.dataTermino);
+                const mesAtual = new Date(state.currentMonth + '-01');
+                return dataInicio <= mesAtual && mesAtual <= dataTermino;
+            });
+
+            const receitaClientes = clientesAtivos.map(c => {
+                const historico = c.historico.find(h => h.mesKey === state.currentMonth);
+                const valorCobrado = historico ? historico.valorCobrado : c.servicos.reduce((sum, s) => sum + (s.valorPersonalizado || 0), 0);
+                const statusPagamento = historico ? historico.pagamentoStatus : 'Pendente';
+                return {
+                    nome: c.nome,
+                    valorCobrado,
+                    statusPagamento,
+                    observacoes: historico ? historico.observacoes : ''
+                };
+            });
+
+            const totalClientes = receitaClientes.reduce((sum, r) => sum + r.valorCobrado, 0);
+            const diferenca = fin.receitaTotal - totalClientes;
+
+            let html = '<div class="table-container"><table><thead><tr><th>Cliente</th><th>Valor</th><th>Status</th><th>Obs.</th></tr></thead><tbody>';
+            html += receitaClientes.map(r => `
+                <tr>
+                    <td>${r.nome}</td>
+                    <td>${formatCurrency(r.valorCobrado)}</td>
+                    <td><span class="badge badge-${r.statusPagamento.toLowerCase()}">${r.statusPagamento}</span></td>
+                    <td style="font-size: 11px;">${r.observacoes}</td>
+                </tr>
+            `).join('');
+            html += '</tbody></table></div>';
+            html += `<div style="margin-top: 12px; padding: 12px; background: rgba(19, 42, 133, 0.3); border-radius: 8px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div>
+                        <div class="text-secondary" style="font-size: 11px;">Total Clientes</div>
+                        <div class="text-gold font-mono" style="font-weight: 700; font-size: 16px;">R$ ${totalClientes.toFixed(2)}</div>
+                    </div>
+                    <div>
+                        <div class="text-secondary" style="font-size: 11px;">Diferença vs Receita</div>
+                        <div style="font-weight: 700; font-size: 16px; color: ${diferenca > 0 ? 'var(--warning)' : 'var(--success)'};">R$ ${diferenca.toFixed(2)}</div>
+                    </div>
+                </div>
+            </div>`;
+
+            container.innerHTML = html;
+        };
+
+        // ==================== SUGESTÕES DE INVESTIMENTO ====================
+        const updateSugestoesInvestimento = () => {
+            const fin = getFinanceiro(state.currentMonth);
+            const totalFunc = fin.funcionarios.reduce((sum, f) => sum + (f.valor || 0), 0);
+            const totalApp = fin.aplicativos.reduce((sum, a) => sum + (a.valor || 0), 0);
+            const totalInvest = fin.investimentos.reduce((sum, i) => sum + (i.valor || 0), 0);
+            const totalPessoal = fin.gastosPessoais.reduce((sum, g) => sum + (g.valor || 0), 0);
+            const saldoLivre = fin.receitaTotal - (totalFunc + totalApp + totalInvest + totalPessoal);
+
+            const sugestoes = [];
+            if (saldoLivre <= 500) {
+                sugestoes.push(
+                    { nome: 'Tesouro Selic', descricao: 'Renda fixa com liquidez diária', risco: 'Baixo', liquidez: 'Diária', rendimento: '~11% a.a.' },
+                    { nome: 'CDB Liquidez Diária', descricao: 'Certificado de Depósito Bancário', risco: 'Baixo', liquidez: 'Diária', rendimento: '~100% CDI' },
+                    { nome: 'Nubank/Inter/C6', descricao: 'Rendimento automático em conta', risco: 'Baixo', liquidez: 'Imediata', rendimento: '~105% CDI' }
+                );
+            } else if (saldoLivre <= 2000) {
+                sugestoes.push(
+                    { nome: 'CDB 100%+ CDI', descricao: 'Retorno acima do CDI', risco: 'Baixo', liquidez: '30-90 dias', rendimento: '~110% CDI' },
+                    { nome: 'LCI/LCA', descricao: 'Isenta de Imposto de Renda', risco: 'Baixo', liquidez: '90-180 dias', rendimento: '~90% CDI' },
+                    { nome: 'Tesouro IPCA+', descricao: 'Proteção contra inflação', risco: 'Médio', liquidez: 'Diária', rendimento: 'IPCA + 5% a.a.' }
+                );
+            } else if (saldoLivre <= 5000) {
+                sugestoes.push(
+                    { nome: 'Fundos Renda Fixa', descricao: 'Diversificação em títulos', risco: 'Médio', liquidez: 'D+1', rendimento: '~8-10% a.a.' },
+                    { nome: 'Tesouro IPCA+', descricao: 'Proteção contra inflação', risco: 'Médio', liquidez: 'Diária', rendimento: 'IPCA + 5% a.a.' },
+                    { nome: 'ETFs IMAB11/IRFM11', descricao: 'Renda fixa diversificada', risco: 'Médio', liquidez: 'Diária', rendimento: '~7-9% a.a.' }
+                );
+            } else {
+                sugestoes.push(
+                    { nome: 'ETFs BOVA11/IVVB11', descricao: 'Ações diversificadas', risco: 'Alto', liquidez: 'Diária', rendimento: '~12-15% a.a.' },
+                    { nome: 'FIIs', descricao: 'Fundos Imobiliários', risco: 'Alto', liquidez: 'Diária', rendimento: '~8-12% a.a.' },
+                    { nome: 'Diversificação Internacional', descricao: 'Reduz risco cambial', risco: 'Alto', liquidez: 'Diária', rendimento: 'Variável' }
+                );
+            }
+
+            const container = document.getElementById('sugestoesInvestimento');
+            container.innerHTML = '<div class="grid-3">' + sugestoes.map(s => `
+                <div style="background: rgba(19, 42, 133, 0.3); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px;">
+                    <div style="font-weight: 600; margin-bottom: 6px; color: var(--accent-gold); font-size: 13px;">${s.nome}</div>
+                    <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 8px;">${s.descricao}</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; font-size: 10px;">
+                        <div><span style="color: var(--text-secondary);">Risco:</span> <span style="color: var(--accent-gold);">${s.risco}</span></div>
+                        <div><span style="color: var(--text-secondary);">Liquidez:</span> <span style="color: var(--accent-gold);">${s.liquidez}</span></div>
+                        <div style="grid-column: 1 / -1;"><span style="color: var(--text-secondary);">Rendimento:</span> <span style="color: var(--success);">${s.rendimento}</span></div>
+                    </div>
+                </div>
+            `).join('') + '</div>';
+        };
+
+        // ==================== EXPORT CSV ====================
+        const exportarCSV = () => {
+            const fin = getFinanceiro(state.currentMonth);
+            const clientes = getClientes();
+            const equipe = getEquipe();
+            const produtos = getProdutos();
+
+            let csv = 'UPMIND - Exportação Geral\n\n';
+
+            // Financeiro
+            csv += `Financeiro - ${state.currentMonth}\n`;
+            csv += `Receita Total,${fin.receitaTotal}\n`;
+            csv += `Meta Mensal,${fin.metaMensal}\n`;
+            csv += `\nFuncionários\n`;
+            fin.funcionarios.forEach(f => csv += `${f.nome},${f.valor}\n`);
+            csv += `\nAplicativos\n`;
+            fin.aplicativos.forEach(a => csv += `${a.nome},${a.valor}\n`);
+            csv += `\nInvestimentos\n`;
+            fin.investimentos.forEach(i => csv += `${i.nome},${i.valor}\n`);
+            csv += `\nGastos Pessoais\n`;
+            fin.gastosPessoais.forEach(g => csv += `${g.nome},${g.valor}\n`);
+
+            // Clientes
+            csv += `\n\nClientes\n`;
+            csv += `Nome,Tipo,Status,Duração,Data Início,Data Término,Total Mensal\n`;
+            clientes.forEach(c => {
+                const total = c.servicos.reduce((sum, s) => sum + (s.valorPersonalizado || 0), 0);
+                csv += `"${c.nome}","${c.tipo}","${c.status}","${c.duracaoContrato}","${c.dataInicio}","${c.dataTermino}","${total}"\n`;
+            });
+
+            // Equipe
+            csv += `\n\nEquipe\n`;
+            csv += `Nome,Cargo,Vínculo,Valor Mensal,Status\n`;
+            equipe.forEach(e => csv += `"${e.nome}","${e.cargo}","${e.vinculo}","${e.valorMensal}","${e.status}"\n`);
+
+            // Produtos
+            csv += `\n\nProdutos\n`;
+            csv += `Nome,Categoria,Valor Referência,Descrição\n`;
+            produtos.forEach(p => csv += `"${p.nome}","${p.categoria}","${p.valorRef}","${p.descricao}"\n`);
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `UPMIND_${state.currentMonth}.csv`;
+            link.click();
+            showToast('CSV exportado com sucesso!', 'success');
+        };
+
+        // ==================== EVENT LISTENERS ====================
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize
+            initProdutos();
+            document.getElementById('monthSelector').value = state.currentMonth;
+            loadFinanceiroMes();
+            renderProdutosList();
+            renderEquipeList();
+            renderClientesList();
+            renderServicosCheckbox();
+
+            // Tab switching
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    e.target.classList.add('active');
+                    const tabId = e.target.dataset.tab;
+                    document.getElementById(tabId).classList.add('active');
+                    state.currentFilter = 'todos';
+                });
+            });
+
+            // Month navigation
+            document.getElementById('monthSelector').addEventListener('change', (e) => {
+                state.currentMonth = e.target.value;
+                loadFinanceiroMes();
+            });
+
+            document.getElementById('prevMonth').addEventListener('click', () => {
+                state.currentMonth = addMonths(state.currentMonth, -1);
+                document.getElementById('monthSelector').value = state.currentMonth;
+                loadFinanceiroMes();
+            });
+
+            document.getElementById('nextMonth').addEventListener('click', () => {
+                state.currentMonth = addMonths(state.currentMonth, 1);
+                document.getElementById('monthSelector').value = state.currentMonth;
+                loadFinanceiroMes();
+            });
+
+            // Financeiro buttons
+            document.getElementById('salvarFinanceiroBtn').addEventListener('click', salvarFinanceiro);
+            document.getElementById('exportarCSVBtn').addEventListener('click', exportarCSV);
+            document.getElementById('addFuncionarioBtn').addEventListener('click', addFuncionario);
+            document.getElementById('addAppBtn').addEventListener('click', addApp);
+            document.getElementById('addInvestBtn').addEventListener('click', addInvest);
+            document.getElementById('addGastoBtn').addEventListener('click', addGasto);
+            document.getElementById('syncEquipeBtn').addEventListener('click', syncEquipe);
+
+            // Equipe buttons
+            document.getElementById('adicionarColaboradorBtn').addEventListener('click', () => {
+                const nome = document.getElementById('nomeColaborador').value.trim();
+                const cargo = document.getElementById('cargoColaborador').value;
+                const vinculo = document.getElementById('vinculoColaborador').value;
+                const valor = parseCurrency(document.getElementById('valorColaborador').value);
+                const status = document.getElementById('statusColaborador').value;
+
+                if (!nome || !cargo || valor <= 0) {
+                    showToast('Preencha os campos obrigatórios!', 'error');
+                    return;
+                }
+
+                const novoColaborador = {
+                    id: uid(),
+                    nome,
+                    cargo,
+                    vinculo,
+                    valorMensal: valor,
+                    status
+                };
+
+                let equipe = getEquipe();
+                equipe.push(novoColaborador);
+                saveEquipe(equipe);
+                renderEquipeList();
+                document.getElementById('nomeColaborador').value = '';
+                document.getElementById('cargoColaborador').value = '';
+                document.getElementById('valorColaborador').value = '';
+                showToast('Colaborador adicionado com sucesso!', 'success');
+            });
+
+            document.getElementById('enviarParaFinanceiroBtn').addEventListener('click', syncEquipe);
+
+            // Clientes buttons
+            document.getElementById('adicionarClienteBtn').addEventListener('click', adicionarCliente);
+            document.getElementById('duracaoContrato').addEventListener('change', (e) => {
+                const group = document.getElementById('dataTerminoGroup');
+                if (e.target.value === 'Personalizado') {
+                    group.style.display = 'block';
+                } else {
+                    group.style.display = 'none';
+                }
+            });
+
+            // Cliente filters
+            document.querySelectorAll('[data-filter]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    state.currentFilter = e.target.dataset.filter;
+                    renderClientesList();
+                });
+            });
+
+            // Produtos buttons
+            document.getElementById('adicionarProdutoBtn').addEventListener('click', () => {
+                const nome = document.getElementById('nomeProduto').value.trim();
+                const categoria = document.getElementById('categoriaProduto').value.trim();
+                const valorRef = parseCurrency(document.getElementById('valorRefProduto').value);
+                const descricao = document.getElementById('descricaoProduto').value.trim();
+
+                if (!nome || !categoria || valorRef <= 0) {
+                    showToast('Preencha os campos obrigatórios!', 'error');
+                    return;
+                }
+
+                const novoProduto = {
+                    id: uid(),
+                    nome,
+                    categoria,
+                    valorRef,
+                    descricao,
+                    ativo: true
+                };
+
+                let produtos = getProdutos();
+                produtos.push(novoProduto);
+                saveProdutos(produtos);
+                renderProdutosList();
+                renderServicosCheckbox();
+                document.getElementById('nomeProduto').value = '';
+                document.getElementById('categoriaProduto').value = '';
+                document.getElementById('valorRefProduto').value = '';
+                document.getElementById('descricaoProduto').value = '';
+                showToast('Produto adicionado com sucesso!', 'success');
+            });
+
+            // Enter key support
+            document.getElementById('nomeFuncionario').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') addFuncionario();
+            });
+            document.getElementById('valorFuncionario').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') addFuncionario();
+            });
+            document.getElementById('nomeApp').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') addApp();
+            });
+            document.getElementById('valorApp').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') addApp();
+            });
+            document.getElementById('nomeInvest').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') addInvest();
+            });
+            document.getElementById('valorInvest').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') addInvest();
+            });
+            document.getElementById('nomeGasto').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') addGasto();
+            });
+            document.getElementById('valorGasto').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') addGasto();
+            });
+        });
+
+        // Input masking for currency
+        document.addEventListener('blur', (e) => {
+            if (e.target.type === 'number' && e.target.placeholder.includes('R$')) {
+                const value = parseCurrency(e.target.value);
+                e.target.value = value.toFixed(2);
+            }
+        }, true);
+
+        // Register Service Worker for PWA
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/service-worker.js')
+                .then(registration => {
+                    console.log('Service Worker registered:', registration);
+                })
+                .catch(error => {
+                    console.log('Service Worker registration failed:', error);
+                });
+        }
+
+        // Handle install prompt for Android
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            console.log('Install prompt available');
+        });
+
+        // Update available notification
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                console.log('Service Worker updated');
+            });
+        }
+    </script>
+</body>
+</html>
