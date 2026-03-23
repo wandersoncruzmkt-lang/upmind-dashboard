@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carrossel Instagram — Wanderson Cruz | O Sábio Estrategista do Sertão</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --navy:   #0F2A44;
+      --gold:   #C9A44C;
+      --royal:  #132A85;
+      --white:  #FFFFFF;
+      --offwhite: #F8F6F2;
+      --dark-text: #0F2A44;
+      --muted:  #666666;
+      --muted2: #888888;
+    }
+
+    body {
+      background: #1a1a2e;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 48px 24px;
+      gap: 32px;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    /* ─── SLIDE WRAPPER ─────────────────────────────────────────── */
+    .slide {
+      position: relative;
+      width: 1080px;
+      height: 1350px;
+      overflow: hidden;
+      border-radius: 4px;
+      box-shadow: 0 24px 80px rgba(0,0,0,.7);
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       SLIDE 1 — CAPA
+    ══════════════════════════════════════════════════════════════ */
+    .slide-1 {
+      background: linear-gradient(135deg, #0F2A44 0%, #132A85 100%);
+    }
+
+    /* Photo placeholder — 75% height */
+    .s1-photo {
+      position: absolute;
+      inset: 0;
+      height: 75%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px dashed rgba(201,164,76,.45);
+      margin: 32px 32px 0;
+      border-radius: 12px;
+      background: linear-gradient(160deg, rgba(19,42,133,.35) 0%, rgba(15,42,68,.6) 100%);
+    }
+
+    .s1-photo-label {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 22px;
+      font-weight: 400;
+      color: var(--gold);
+      letter-spacing: .05em;
+      text-align: center;
+      line-height: 1.6;
+      opacity: .75;
+    }
+
+    .s1-photo-label span {
+      display: block;
+      font-size: 15px;
+      opacity: .6;
+      margin-top: 8px;
+    }
+
+    /* Logo top-left */
+    .logo {
+      position: absolute;
+      top: 36px;
+      left: 44px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      z-index: 10;
+    }
+
+    .logo-icon {
+      width: 26px;
+      height: 26px;
+      flex-shrink: 0;
+    }
+
+    .logo-text {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 26px;
+      letter-spacing: .12em;
+      color: var(--gold);
+    }
+
+    /* Gradient overlay + title block */
+    .s1-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 45%;
+      background: linear-gradient(to bottom, transparent 0%, rgba(15,42,68,.95) 40%, #0F2A44 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 0 56px 56px;
+    }
+
+    .s1-eyebrow {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      font-weight: 500;
+      letter-spacing: .28em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 14px;
+      opacity: .8;
+    }
+
+    .s1-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 86px;
+      line-height: .95;
+      color: var(--gold);
+      letter-spacing: .02em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
+    .s1-subtitle {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 26px;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--white);
+      line-height: 1.45;
+      margin-bottom: 40px;
+      max-width: 740px;
+    }
+
+    /* CTA pill */
+    .cta-pill {
+      align-self: center;
+      border: 1.5px solid var(--gold);
+      border-radius: 50px;
+      padding: 12px 32px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--gold);
+      letter-spacing: .08em;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Decorative corner accent */
+    .s1-corner {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 220px;
+      height: 220px;
+      background: linear-gradient(225deg, rgba(201,164,76,.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .s1-line-accent {
+      position: absolute;
+      top: 36px;
+      right: 44px;
+      width: 3px;
+      height: 72px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+      border-radius: 2px;
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       SLIDE 2 — CONTEÚDO (Diagrama de Hierarquia)
+    ══════════════════════════════════════════════════════════════ */
+    .slide-2 {
+      background: var(--offwhite);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 52px 64px 56px;
+    }
+
+    /* Logo centered */
+    .logo-dark {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 44px;
+    }
+
+    .logo-dark .logo-text {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 20px;
+      letter-spacing: .14em;
+      color: var(--dark-text);
+    }
+
+    /* Slide title */
+    .s2-title-block {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .s2-title-line1 {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 38px;
+      font-weight: 700;
+      color: var(--dark-text);
+      line-height: 1.1;
+    }
+
+    .s2-title-line2 {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 32px;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--gold);
+      line-height: 1.2;
+      margin-top: 4px;
+    }
+
+    .s2-subtitle {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 17px;
+      font-weight: 400;
+      color: var(--muted);
+      text-align: center;
+      max-width: 660px;
+      line-height: 1.5;
+      margin-bottom: 52px;
+    }
+
+    /* Diagram */
+    .diagram {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+
+    /* Layer label */
+    .layer-label {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--muted2);
+      margin-bottom: 14px;
+      align-self: flex-start;
+    }
+
+    /* Row of cards */
+    .card-row {
+      display: flex;
+      gap: 20px;
+      width: 100%;
+      margin-bottom: 6px;
+    }
+
+    .card-row.three { justify-content: space-between; }
+    .card-row.two   { justify-content: center; gap: 20px; }
+
+    /* Dark card (layer 1 & 2) */
+    .card-dark {
+      flex: 1;
+      background: var(--navy);
+      border-radius: 12px;
+      padding: 24px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-dark::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--gold), transparent);
+      border-radius: 12px 12px 0 0;
+    }
+
+    .card-icon {
+      font-size: 22px;
+      margin-bottom: 4px;
+    }
+
+    .card-title {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--white);
+      line-height: 1.3;
+    }
+
+    .card-desc {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 300;
+      color: rgba(255,255,255,.62);
+      line-height: 1.5;
+    }
+
+    /* Gold accent card (layer 3 — root / solution) */
+    .card-gold {
+      width: 100%;
+      background: var(--gold);
+      border-radius: 16px;
+      padding: 30px 36px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .card-gold-icon {
+      font-size: 36px;
+      flex-shrink: 0;
+    }
+
+    .card-gold-body {}
+
+    .card-gold-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 32px;
+      letter-spacing: .04em;
+      color: var(--navy);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .card-gold-desc {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 400;
+      color: rgba(15,42,68,.75);
+      line-height: 1.5;
+    }
+
+    /* Arrows between layers */
+    .arrow-down {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 12px 0;
+      gap: 0;
+    }
+
+    .arrow-line {
+      width: 2px;
+      height: 28px;
+      background: linear-gradient(to bottom, var(--muted2), var(--gold));
+    }
+
+    .arrow-head {
+      width: 0;
+      height: 0;
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-top: 12px solid var(--gold);
+    }
+
+    /* Layer divider label */
+    .layer-block {
+      width: 100%;
+    }
+
+    /* Bottom badge */
+    .s2-badge {
+      margin-top: auto;
+      padding-top: 36px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .s2-badge-line {
+      height: 1px;
+      flex: 1;
+      background: linear-gradient(to right, transparent, var(--gold), transparent);
+    }
+
+    .s2-badge-text {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      white-space: nowrap;
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       SLIDE 3 — CTA / ENCERRAMENTO
+    ══════════════════════════════════════════════════════════════ */
+    .slide-3 {
+      background: var(--navy);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 56px 64px 64px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Background geometric accents */
+    .s3-bg-circle {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .s3-bg-circle.large {
+      width: 900px;
+      height: 900px;
+      bottom: -320px;
+      right: -260px;
+      border: 1.5px solid rgba(201,164,76,.1);
+    }
+
+    .s3-bg-circle.medium {
+      width: 580px;
+      height: 580px;
+      bottom: -180px;
+      right: -100px;
+      border: 1.5px solid rgba(201,164,76,.08);
+    }
+
+    .s3-bg-circle.small {
+      width: 320px;
+      height: 320px;
+      bottom: -80px;
+      right: 20px;
+      border: 1.5px solid rgba(201,164,76,.12);
+    }
+
+    .s3-bg-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(201,164,76,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,164,76,.04) 1px, transparent 1px);
+      background-size: 72px 72px;
+      pointer-events: none;
+    }
+
+    /* Top section: logo */
+    .s3-top {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      z-index: 1;
+    }
+
+    /* Gold horizontal rule */
+    .gold-rule {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      width: 100%;
+    }
+
+    .gold-rule-line {
+      height: 1.5px;
+      flex: 1;
+      background: linear-gradient(to right, transparent, var(--gold));
+    }
+
+    .gold-rule-line.rev {
+      background: linear-gradient(to left, transparent, var(--gold));
+    }
+
+    .gold-rule-diamond {
+      width: 8px;
+      height: 8px;
+      background: var(--gold);
+      transform: rotate(45deg);
+      flex-shrink: 0;
+    }
+
+    /* Main CTA content */
+    .s3-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 28px;
+      z-index: 1;
+    }
+
+    .s3-number-badge {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 130px;
+      line-height: 1;
+      color: transparent;
+      -webkit-text-stroke: 1.5px rgba(201,164,76,.25);
+      letter-spacing: -.02em;
+      user-select: none;
+      position: absolute;
+      top: 340px;
+      left: 50%;
+      transform: translateX(-50%);
+      pointer-events: none;
+    }
+
+    .s3-tag {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      background: rgba(201,164,76,.1);
+      border: 1px solid rgba(201,164,76,.25);
+      border-radius: 50px;
+      padding: 8px 22px;
+    }
+
+    .s3-headline {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 96px;
+      line-height: .92;
+      color: var(--white);
+      letter-spacing: .02em;
+      text-transform: uppercase;
+    }
+
+    .s3-headline .gold-word {
+      color: var(--gold);
+    }
+
+    .s3-body {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 22px;
+      font-weight: 300;
+      color: rgba(255,255,255,.72);
+      line-height: 1.55;
+      max-width: 720px;
+    }
+
+    /* Action steps row */
+    .s3-steps {
+      display: flex;
+      gap: 16px;
+      width: 100%;
+      z-index: 1;
+    }
+
+    .s3-step {
+      flex: 1;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(201,164,76,.2);
+      border-radius: 12px;
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      text-align: center;
+    }
+
+    .s3-step-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px;
+      color: var(--gold);
+      letter-spacing: .06em;
+    }
+
+    .s3-step-text {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      color: rgba(255,255,255,.7);
+      line-height: 1.4;
+    }
+
+    /* Bottom section */
+    .s3-bottom {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      z-index: 1;
+      width: 100%;
+    }
+
+    .s3-cta-button {
+      background: linear-gradient(135deg, var(--gold) 0%, #b8903d 100%);
+      color: var(--navy);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 24px;
+      letter-spacing: .12em;
+      padding: 20px 64px;
+      border-radius: 6px;
+      display: inline-block;
+      text-transform: uppercase;
+    }
+
+    .s3-handle {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 17px;
+      font-weight: 400;
+      color: rgba(255,255,255,.45);
+      letter-spacing: .08em;
+    }
+
+    .s3-handle span {
+      color: var(--gold);
+      font-weight: 600;
+    }
+
+    /* ─── PRINT LAYOUT LABEL ──────────────────────────────────── */
+    .slide-label {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255,255,255,.35);
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      align-self: flex-start;
+      margin-bottom: -20px;
+    }
+
+    @media print {
+      body { background: white; padding: 0; gap: 0; }
+      .slide { box-shadow: none; border-radius: 0; page-break-after: always; }
+      .slide-label { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── LABELS (hidden on print) ──────────────────────────────── -->
+
+  <div class="slide-label">Slide 1 / 3 — Capa</div>
+
+  <!-- ════════════════════════════════════════════════════════════
+       SLIDE 1 — CAPA
+  ════════════════════════════════════════════════════════════════ -->
+  <div class="slide slide-1">
+
+    <!-- Decorative corner -->
+    <div class="s1-corner"></div>
+    <div class="s1-line-accent"></div>
+
+    <!-- Logo -->
+    <div class="logo">
+      <svg class="logo-icon" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Compass rose -->
+        <circle cx="13" cy="13" r="11.5" stroke="#C9A44C" stroke-width="1.2"/>
+        <circle cx="13" cy="13" r="2.5" fill="#C9A44C"/>
+        <!-- N -->
+        <polygon points="13,3.5 14.2,8 11.8,8" fill="#C9A44C"/>
+        <!-- S -->
+        <polygon points="13,22.5 14.2,18 11.8,18" fill="rgba(201,164,76,.4)"/>
+        <!-- E -->
+        <polygon points="22.5,13 18,11.8 18,14.2" fill="rgba(201,164,76,.4)"/>
+        <!-- W -->
+        <polygon points="3.5,13 8,11.8 8,14.2" fill="rgba(201,164,76,.4)"/>
+        <!-- Cross lines -->
+        <line x1="13" y1="3.5" x2="13" y2="8" stroke="#C9A44C" stroke-width=".8"/>
+        <line x1="13" y1="18" x2="13" y2="22.5" stroke="#C9A44C" stroke-width=".8" stroke-opacity=".4"/>
+        <line x1="3.5" y1="13" x2="8" y2="13" stroke="#C9A44C" stroke-width=".8" stroke-opacity=".4"/>
+        <line x1="18" y1="13" x2="22.5" y2="13" stroke="#C9A44C" stroke-width=".8" stroke-opacity=".4"/>
+      </svg>
+      <span class="logo-text">W. CRUZ</span>
+    </div>
+
+    <!-- Photo placeholder -->
+    <div class="s1-photo">
+      <div class="s1-photo-label">
+        [ INSERIR FOTO WANDERSON ]
+        <span>Recomendado: retrato vertical, fundo neutro ou estúdio</span>
+      </div>
+    </div>
+
+    <!-- Title overlay -->
+    <div class="s1-overlay">
+      <div class="s1-eyebrow">Estratégia &amp; Autoridade Digital</div>
+      <div class="s1-title">O MÉTODO PARA<br>PARAR DE IMPROVISAR</div>
+      <div class="s1-subtitle">e construir autoridade de verdade no digital</div>
+      <div style="display:flex;justify-content:center;">
+        <div class="cta-pill">Arraste para o lado &nbsp;→</div>
+      </div>
+    </div>
+
+  </div><!-- /slide-1 -->
+
+
+  <div class="slide-label">Slide 2 / 3 — Conteúdo</div>
+
+  <!-- ════════════════════════════════════════════════════════════
+       SLIDE 2 — CONTEÚDO (Diagrama de Hierarquia)
+  ════════════════════════════════════════════════════════════════ -->
+  <div class="slide slide-2">
+
+    <!-- Logo centered -->
+    <div class="logo-dark">
+      <svg width="18" height="18" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="13" cy="13" r="11.5" stroke="#0F2A44" stroke-width="1.2"/>
+        <circle cx="13" cy="13" r="2.5" fill="#0F2A44"/>
+        <polygon points="13,3.5 14.2,8 11.8,8" fill="#0F2A44"/>
+        <polygon points="13,22.5 14.2,18 11.8,18" fill="rgba(15,42,68,.35)"/>
+        <polygon points="22.5,13 18,11.8 18,14.2" fill="rgba(15,42,68,.35)"/>
+        <polygon points="3.5,13 8,11.8 8,14.2" fill="rgba(15,42,68,.35)"/>
+      </svg>
+      <span class="logo-text" style="color:var(--dark-text);font-size:18px;letter-spacing:.14em;">W. CRUZ</span>
+    </div>
+
+    <!-- Slide title -->
+    <div class="s2-title-block">
+      <div class="s2-title-line1">Por que sua estratégia não decola?</div>
+      <div class="s2-title-line2">O mapa do problema até a raiz</div>
+    </div>
+
+    <div class="s2-subtitle">
+      A maioria trata sintomas. O Sábio Estrategista do Sertão vai à causa real.<br>
+      Veja onde cada pessoa trava — e como atravessar.
+    </div>
+
+    <!-- DIAGRAM -->
+    <div class="diagram">
+
+      <!-- CAMADA 1 — Sintomas Visíveis -->
+      <div class="layer-block">
+        <div class="layer-label">↑ Sintomas Visíveis</div>
+        <div class="card-row two">
+          <div class="card-dark">
+            <div class="card-icon">📉</div>
+            <div class="card-title">Resultados inconsistentes</div>
+            <div class="card-desc">Semanas boas, semanas ruins. Sem previsibilidade de receita ou audiência.</div>
+          </div>
+          <div class="card-dark">
+            <div class="card-icon">🔄</div>
+            <div class="card-title">Ciclo de retrabalho constante</div>
+            <div class="card-desc">Muito esforço, pouco progresso. A roda gira mas o carro não anda.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Arrow -->
+      <div class="arrow-down">
+        <div class="arrow-line"></div>
+        <div class="arrow-head"></div>
+      </div>
+
+      <!-- CAMADA 2 — Causas Intermediárias -->
+      <div class="layer-block">
+        <div class="layer-label">→ Causas Intermediárias</div>
+        <div class="card-row three">
+          <div class="card-dark">
+            <div class="card-icon">🎯</div>
+            <div class="card-title">Posicionamento difuso</div>
+            <div class="card-desc">Fala para todos, não impacta ninguém.</div>
+          </div>
+          <div class="card-dark">
+            <div class="card-icon">🗺️</div>
+            <div class="card-title">Sem método definido</div>
+            <div class="card-desc">Ação sem estratégia é apenas movimento.</div>
+          </div>
+          <div class="card-dark">
+            <div class="card-icon">⚡</div>
+            <div class="card-title">Energia dispersa</div>
+            <div class="card-desc">Múltiplas frentes, nenhuma vencida.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Arrow -->
+      <div class="arrow-down">
+        <div class="arrow-line"></div>
+        <div class="arrow-head"></div>
+      </div>
+
+      <!-- CAMADA 3 — A Raiz / Solução -->
+      <div class="layer-block">
+        <div class="layer-label" style="color:var(--gold);letter-spacing:.18em;">★ A Causa Raiz — E a Solução</div>
+        <div class="card-gold">
+          <div class="card-gold-icon">🧭</div>
+          <div class="card-gold-body">
+            <div class="card-gold-title">Falta de clareza estratégica</div>
+            <div class="card-gold-desc">
+              Quem não sabe para onde vai, aceita qualquer caminho. O método W. Cruz começa
+              por definir o norte — e só depois traça a rota.
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /diagram -->
+
+    <!-- Bottom badge -->
+    <div class="s2-badge" style="width:100%;">
+      <div class="s2-badge-line"></div>
+      <div class="s2-badge-text">Próximo slide: o que fazer agora</div>
+      <div class="s2-badge-line" style="background:linear-gradient(to left,transparent,var(--gold),transparent);"></div>
+    </div>
+
+  </div><!-- /slide-2 -->
+
+
+  <div class="slide-label">Slide 3 / 3 — CTA</div>
+
+  <!-- ════════════════════════════════════════════════════════════
+       SLIDE 3 — CTA / ENCERRAMENTO
+  ════════════════════════════════════════════════════════════════ -->
+  <div class="slide slide-3">
+
+    <!-- BG decorations -->
+    <div class="s3-bg-grid"></div>
+    <div class="s3-bg-circle large"></div>
+    <div class="s3-bg-circle medium"></div>
+    <div class="s3-bg-circle small"></div>
+
+    <!-- Watermark number -->
+    <div class="s3-number-badge">03</div>
+
+    <!-- Top: logo + rule -->
+    <div class="s3-top" style="width:100%;">
+      <div class="logo" style="position:relative;top:auto;left:auto;align-self:center;">
+        <svg class="logo-icon" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="13" cy="13" r="11.5" stroke="#C9A44C" stroke-width="1.2"/>
+          <circle cx="13" cy="13" r="2.5" fill="#C9A44C"/>
+          <polygon points="13,3.5 14.2,8 11.8,8" fill="#C9A44C"/>
+          <polygon points="13,22.5 14.2,18 11.8,18" fill="rgba(201,164,76,.4)"/>
+          <polygon points="22.5,13 18,11.8 18,14.2" fill="rgba(201,164,76,.4)"/>
+          <polygon points="3.5,13 8,11.8 8,14.2" fill="rgba(201,164,76,.4)"/>
+        </svg>
+        <span class="logo-text">W. CRUZ</span>
+      </div>
+      <div class="gold-rule" style="width:100%;">
+        <div class="gold-rule-line"></div>
+        <div class="gold-rule-diamond"></div>
+        <div class="gold-rule-line rev"></div>
+      </div>
+    </div>
+
+    <!-- Center content -->
+    <div class="s3-center">
+      <div class="s3-tag">Próximo Passo</div>
+      <div class="s3-headline">
+        Pare de<br>
+        <span class="gold-word">adivinhar.</span><br>
+        Comece a<br>estrategizar.
+      </div>
+      <div class="s3-body">
+        Um único diagnóstico certeiro vale mais do que meses de tentativa e erro.
+        Você está pronto para parar de improvisar e construir algo sólido?
+      </div>
+    </div>
+
+    <!-- Steps -->
+    <div class="s3-steps">
+      <div class="s3-step">
+        <div class="s3-step-num">01</div>
+        <div class="s3-step-text">Salva este post para revisitar</div>
+      </div>
+      <div class="s3-step">
+        <div class="s3-step-num">02</div>
+        <div class="s3-step-text">Comenta qual camada você está travado</div>
+      </div>
+      <div class="s3-step">
+        <div class="s3-step-num">03</div>
+        <div class="s3-step-text">Me chama no direct para conversar</div>
+      </div>
+    </div>
+
+    <!-- Bottom -->
+    <div class="s3-bottom">
+      <div class="gold-rule" style="width:100%;">
+        <div class="gold-rule-line"></div>
+        <div class="gold-rule-diamond"></div>
+        <div class="gold-rule-line rev"></div>
+      </div>
+      <div class="s3-cta-button">Fala comigo no Direct →</div>
+      <div class="s3-handle">instagram &nbsp;/&nbsp; <span>@_wancruz</span></div>
+    </div>
+
+  </div><!-- /slide-3 -->
+
+</body>
+</html>
